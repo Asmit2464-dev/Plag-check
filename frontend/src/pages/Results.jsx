@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { useTheme } from '../context/ThemeContext';
-import { FiDownload, FiArrowLeft, FiAlertTriangle, FiCheckCircle, FiInfo } from 'react-icons/fi';
+import { FiDownload, FiArrowLeft, FiAlertTriangle, FiCheckCircle } from 'react-icons/fi';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -92,7 +92,7 @@ function Results() {
     setDownloading(true);
     try {
       const doc = new jsPDF();
-      const { score, summary, matched_sources, highlights, ai_score } = stateData;
+      const { score, summary, matched_sources, highlights } = stateData;
       const orig = 100 - score;
       const date = new Date().toLocaleString();
 
@@ -128,24 +128,20 @@ function Results() {
       let y = 100;
       doc.setTextColor(150, 150, 180);
       doc.setFontSize(9);
-      doc.text('PLAGIARISM', 14, y);
-      doc.text('ORIGINAL', 65, y);
-      doc.text('AI GENERATED', 116, y);
-      doc.text('SOURCES', 167, y);
+      doc.text('PLAGIARISM', 20, y);
+      doc.text('ORIGINAL', 85, y);
+      doc.text('SOURCES', 150, y);
 
       doc.setTextColor(...scoreColor);
       doc.setFontSize(18);
       doc.setFont('helvetica', 'bold');
-      doc.text(`${score}%`, 14, y + 10);
+      doc.text(`${score}%`, 20, y + 10);
 
       doc.setTextColor(52, 211, 153);
-      doc.text(`${orig}%`, 65, y + 10);
-
-      doc.setTextColor(168, 85, 247);
-      doc.text(`${ai_score || 0}%`, 116, y + 10);
+      doc.text(`${orig}%`, 85, y + 10);
 
       doc.setTextColor(96, 165, 250);
-      doc.text(`${matched_sources?.length || 0}`, 167, y + 10);
+      doc.text(`${matched_sources?.length || 0}`, 150, y + 10);
 
       y = 122;
       doc.setDrawColor(40, 45, 80);
@@ -258,7 +254,7 @@ function Results() {
     );
   }
 
-  const { score, summary, matched_sources, highlights, ai_score } = stateData;
+  const { score, summary, matched_sources, highlights } = stateData;
   const col = score <= 20 ? '#34d399' : score <= 50 ? '#fbbf24' : '#f43f5e';
   const orig = 100 - score;
 
@@ -275,7 +271,6 @@ function Results() {
 
   const metrics = [
     { label: 'Plagiarism Score', value: `${score}%`, sub: 'Overall similarity', color: col, accentBar: col },
-    { label: 'AI Probability', value: `${ai_score || 0}%`, sub: 'GPT / AI Written', color: (ai_score || 0) > 50 ? '#f43f5e' : '#a855f7', accentBar: (ai_score || 0) > 50 ? '#f43f5e' : '#a855f7' },
     { label: 'Original Content', value: `${orig}%`, sub: 'Unique text', color: '#34d399', accentBar: '#34d399' },
     { label: 'Sources Found', value: matched_sources?.length || 0, sub: 'Matched sources', color: '#60a5fa', accentBar: '#60a5fa' },
     { label: 'Verdict', value: getVerdict(score), sub: 'Final result', color: col, accentBar: col },
@@ -289,9 +284,9 @@ function Results() {
       transition={{ duration: 0.4 }}
       style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}
     >
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         {metrics.map((m, i) => (
-          <motion.div key={i} whileHover={{ y: -5 }} className="glass-panel" style={{ padding: '1rem', position: 'relative', overflow: 'hidden' }}>
+          <motion.div key={i} whileHover={{ y: -5 }} className="glass-panel" style={{ padding: '1.25rem', position: 'relative', overflow: 'hidden' }}>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px', fontWeight: 600 }}>{m.label}</div>
             <div style={{ fontSize: typeof m.value === 'string' && m.value.length > 5 ? '1.25rem' : '2rem', fontWeight: '800', color: m.color, marginBottom: '4px' }}>{m.value}</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{m.sub}</div>
@@ -300,7 +295,7 @@ function Results() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '1.5rem' }}>
         <motion.div 
           animate={score > 50 ? { 
             boxShadow: ["0 0 0px rgba(244, 63, 94, 0)", "0 0 20px rgba(244, 63, 94, 0.4)", "0 0 0px rgba(244, 63, 94, 0)"] 
@@ -353,35 +348,6 @@ function Results() {
             }) : (
               <div style={{ padding: '2rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>No sources matched</div>
             )}
-          </div>
-        </div>
-
-        <div className="glass-panel" style={{ border: `1px solid ${isDark ? 'rgba(139,92,246,0.3)' : 'rgba(139,92,246,0.2)'}`, overflow: 'hidden' }}>
-          <div style={{ padding: '1rem 1.5rem', borderBottom: `1px solid var(--border-color)`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ fontSize: '1rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <FiInfo style={{ color: '#a78bfa' }} /> AI Insights
-            </div>
-            <span style={{ background: 'rgba(139,92,246,0.15)', color: '#a78bfa', padding: '4px 8px', borderRadius: '6px', fontSize: '0.65rem', fontWeight: '700' }}>Tavily AI</span>
-          </div>
-          <div>
-            {((ai_score || 0) <= 20 ? [
-              { tag: 'AI Status', color: '#34d399', text: 'Text appears to be entirely human-written.' },
-            ] : (ai_score || 0) <= 50 ? [
-              { tag: 'AI Warning', color: '#fbbf24', text: 'Some portions exhibit patterns common in AI-generated text.' },
-            ] : [
-              { tag: 'AI Alert', color: '#f43f5e', text: 'High probability of being generated by ChatGPT or similar AI.' },
-            ]).concat(score <= 20 ? [
-              { tag: 'Recommendation', color: '#a78bfa', text: 'Safe for submission. Content appears original.' },
-            ] : score <= 50 ? [
-              { tag: 'Recommendation', color: '#a78bfa', text: 'Revise flagged sections before submission.' },
-            ] : [
-              { tag: 'Recommendation', color: '#fbbf24', text: 'Major rewrite required. Do not submit.' },
-            ]).map((ins, i) => (
-              <div key={i} style={{ padding: '1rem 1.5rem', borderBottom: `1px solid var(--border-color)` }}>
-                <div style={{ fontSize: '0.75rem', fontWeight: '700', letterSpacing: '0.5px', color: ins.color, marginBottom: '6px', textTransform: 'uppercase' }}>{ins.tag}</div>
-                <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: '1.6' }}>{ins.text}</div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
