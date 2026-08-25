@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
-import { FiMail, FiLock, FiUser, FiArrowRight, FiChevronRight, FiSmartphone, FiShield } from 'react-icons/fi';
+import { FiChevronRight, FiSmartphone } from 'react-icons/fi';
 import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook, FaApple } from 'react-icons/fa';
 

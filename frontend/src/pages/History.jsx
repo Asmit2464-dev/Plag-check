@@ -58,7 +58,6 @@ function History({ dark }) {
   const cardHover  = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.15)';
   const textPrimary= dark ? '#ffffff' : '#111111';
   const textMuted  = dark ? 'rgba(255,255,255,0.35)' : '#888';
-  const sepColor   = dark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
 
   const stats = [
     { label: 'Total Checks', value: history.length,                                          color: textPrimary, sub: 'All time',     icon: '📊' },

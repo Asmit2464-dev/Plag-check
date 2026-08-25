@@ -1,16 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { checkPlagiarism } from '../services/api';
 import Console from '../components/Console';
-import { useTheme } from '../context/ThemeContext';
 import toast from 'react-hot-toast';
 import { FiFileText, FiCode, FiSearch, FiRefreshCw, FiMic, FiMicOff, FiSettings } from 'react-icons/fi';
 
 function Home() {
   const navigate = useNavigate();
-  const { theme } = useTheme();
-  const dark = theme === 'dark';
   
   const [text, setText] = useState('');
   const [reference, setReference] = useState('');

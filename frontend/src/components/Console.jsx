@@ -31,8 +31,6 @@ function Console({ logs }) {
     }
   };
 
-  const cardBg = 'var(--bg-secondary)';
-  const cardBorder = 'var(--border-color)';
   const headBg = dark ? 'rgba(59,130,246,0.06)' : 'rgba(59,130,246,0.05)';
   const headBorder = dark ? 'rgba(59,130,246,0.1)' : 'rgba(59,130,246,0.12)';
   const titleColor = 'var(--text-secondary)';

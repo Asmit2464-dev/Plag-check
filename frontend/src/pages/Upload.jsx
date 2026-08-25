@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { checkPlagiarism } from '../services/api';
 import * as pdfjsLib from 'pdfjs-dist';
 import mammoth from 'mammoth';
 import ProgressBar from '../components/ProgressBar';
 import toast from 'react-hot-toast';
-import { FiUploadCloud, FiSearch, FiFileText, FiSettings, FiCheckCircle, FiTrash2, FiEdit3, FiZap, FiMic, FiMicOff } from 'react-icons/fi';
+import { FiUploadCloud, FiSearch, FiSettings, FiCheckCircle, FiTrash2, FiEdit3, FiZap, FiMic, FiMicOff } from 'react-icons/fi';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -262,7 +262,13 @@ function Upload() {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '1.5rem', alignItems: 'start' }}>
         
         {/* Left Column: Text Input & Upload */}
-        <div className="glass-panel" style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: '500px' }}>
+        <div 
+          className="glass-panel" 
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
+          style={{ padding: '0', overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: '500px', border: dragOver ? '2px dashed var(--accent-primary)' : undefined }}
+        >
           {/* Editor Header */}
           <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.1)' }}>
              <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
