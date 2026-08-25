@@ -1,3 +1,4 @@
+import os
 import nltk
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -11,15 +12,16 @@ import requests
 from bs4 import BeautifulSoup
 import random
 
-nltk.download('punkt')
-nltk.download('stopwords')
-nltk.download('punkt_tab')
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
+nltk.download('punkt_tab', quiet=True)
 
 app = Flask(__name__)
 CORS(app)
 
 # Tavily Client
-tavily = TavilyClient(api_key="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")
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "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")
+tavily = TavilyClient(api_key=TAVILY_API_KEY)
 
 FALLBACK_STOPWORDS = {
     'a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'in',
@@ -320,5 +322,6 @@ def health():
     return jsonify({"status": "ok"})
 
 if __name__ == "__main__":
-    print("Python ML Server chal raha hai port 5001 pe!")
-    app.run(port=5001, debug=True)
+    port = int(os.environ.get("PORT", 5001))
+    print(f"Python ML Server running on port {port}!")
+    app.run(host="0.0.0.0", port=port)

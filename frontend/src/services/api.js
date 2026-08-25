@@ -46,4 +46,4 @@ export const checkPlagiarism = async (text, reference, checkAI = false, excludeQ
     console.error('API Error:', error);
     throw error;
   }
-};
+};

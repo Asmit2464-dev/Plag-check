@@ -28,7 +28,8 @@ const checkPlagiarism = async (req, res) => {
     const userId = getUserFromToken(req);
 
     // ✅ Call ML service for plagiarism check
-    const mlResponse = await axios.post('http://127.0.0.1:5001/analyze', {
+    const ML_URL = process.env.ML_SERVICE_URL || 'http://127.0.0.1:5001';
+    const mlResponse = await axios.post(`${ML_URL}/analyze`, {
       text: text,
       reference: reference || null,
       check_ai: checkAI || false,
