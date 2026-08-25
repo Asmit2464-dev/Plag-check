@@ -38,8 +38,8 @@ app.use(globalLimiter);
 
 // ✅ FIX: cors line add ki
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'],
-  methods: ['GET', 'POST'],
+  origin: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true,
 }));
 
