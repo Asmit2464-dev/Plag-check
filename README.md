@@ -1,6 +1,8 @@
-# 🔍 PlagioCheck — Full-Stack AI & Web Plagiarism Detection System
+# 🔍 Plag-Check — Full-Stack AI & Web Plagiarism Detection System
 
-PlagioCheck is a full-stack, microservice-based text analysis platform that scans text, code, and documents for plagiarized content across the live internet, and evaluates text for AI-generated patterns (ChatGPT, Claude, Gemini).
+Plag-Check is a full-stack, microservice-based text analysis platform that scans text, code, and documents for plagiarized content across the live internet, and evaluates text for AI-generated patterns (ChatGPT, Claude, Gemini).
+
+🚀 **Live Demo:** [https://YOUR-PROJECT-NAME.vercel.app](https://plag-checker-ten.vercel.app/)
 
 ---
 
