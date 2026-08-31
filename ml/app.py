@@ -76,28 +76,53 @@ def word_level_analysis(text1, text2):
     return round(len(common) / max(len(words1), len(words2)) * 100, 2)
 
 # ─── Highlights ───────────────────────────────────────────────
-def get_highlights(input_text, source_text, threshold=30):
+def get_highlights(input_text, source_text, threshold=30, max_highlights=50):
     try:
         input_sentences = sent_tokenize(input_text)
         source_sentences = sent_tokenize(source_text)
-    except:
+
+        if not input_sentences or not source_sentences:
+            return []
+
+        # Preprocess sentences
+        input_clean = [preprocess_text(s) for s in input_sentences]
+        source_clean = [preprocess_text(s) for s in source_sentences]
+
+        all_sentences = input_clean + source_clean
+
+        # Check if there is valid text to vectorize
+        if not any(s.strip() for s in all_sentences):
+            return []
+
+        # One single TF-IDF matrix for all sentences
+        vectorizer = TfidfVectorizer(max_features=10000, stop_words="english")
+        matrix = vectorizer.fit_transform(all_sentences)
+
+        input_count = len(input_sentences)
+        input_vectors = matrix[:input_count]
+        source_vectors = matrix[input_count:]
+
+        # One instant matrix multiplication
+        similarities = cosine_similarity(input_vectors, source_vectors)
+
+        matches = []
+        for i, row in enumerate(similarities):
+            best_index = int(row.argmax())
+            best_score = float(row[best_index] * 100)
+
+            if best_score >= threshold:
+                matches.append({
+                    "input_sentence": input_sentences[i],
+                    "matched_sentence": source_sentences[best_index],
+                    "score": round(best_score, 2)
+                })
+
+        matches.sort(key=lambda x: x["score"], reverse=True)
+        return matches[:max_highlights]
+
+    except Exception as e:
+        print(f"Highlight error: {e}")
         return []
-    matches = []
-    for sent in input_sentences:
-        best_score = 0
-        best_match = ""
-        for src_sent in source_sentences:
-            score = compute_similarity(sent, src_sent)
-            if score > best_score:
-                best_score = score
-                best_match = src_sent
-        if best_score >= threshold:
-            matches.append({
-                "input_sentence": sent,
-                "matched_sentence": best_match,
-                "score": best_score
-            })
-    return matches
 
 def check_web_tavily(input_text):
     try:
